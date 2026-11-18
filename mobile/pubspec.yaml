@@ -1,0 +1,28 @@
+name: omr_scanner
+description: ProProva — painel do professor + câmera de correção de cartões-resposta.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camera: ^0.11.0
+  http: ^1.2.0
+  shared_preferences: ^2.3.0
+  webview_flutter: ^4.10.0          # aba Painel (o mesmo painel da web)
+  webview_flutter_android: ^4.0.0   # seletor de arquivos ("Anexar imagem") no Android
+  image_picker: ^1.1.2              # escolhe a imagem da galeria para o editor
+  share_plus: ^10.1.4               # PDF/CSV do painel → salvar, WhatsApp, imprimir
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,39 @@
+# Sistema completo num servidor: Caddy (HTTPS automático) → painel (Next.js) e API (FastAPI).
+#   cd deploy && cp .env.example .env  (edite)  &&  docker compose up -d --build
+services:
+  api:
+    build: { context: .., dockerfile: backend/Dockerfile }
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      DATA_DIR: /data
+      QR_SECRET: ${QR_SECRET:?defina QR_SECRET no .env}
+      AUTH_SECRET: ${AUTH_SECRET:?defina AUTH_SECRET no .env}
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
+      BACKUP_KEEP: ${BACKUP_KEEP:-14}
+      CORS_ORIGINS: https://${DOMAIN}
+    volumes:
+      - ./data:/data                 # banco, imagens, recortes e backups ficam AQUI no servidor
+    shm_size: "256mb"                # Chromium precisa de /dev/shm maior que o padrão
+    expose: ["8000"]
+
+  web:
+    build: { context: ../web }
+    restart: unless-stopped
+    expose: ["3000"]
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?defina DOMAIN no .env}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data             # certificados HTTPS
+      - caddy_config:/config
+    depends_on: [api, web]
+
+volumes:
+  caddy_data:
+  caddy_config:

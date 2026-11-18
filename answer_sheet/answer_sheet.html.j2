@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cartão-resposta</title>
+<style>
+  /* ISOLAMENTO: este documento NÃO herda nenhum CSS do editor. Fonte, cores e
+     medidas são fixas. Tudo é posicionado em mm, de forma absoluta. */
+  @page { size: 210mm 297mm; margin: 0; }
+  *   { box-sizing: border-box; margin: 0; padding: 0;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { background: #fff; }
+  .sheet { position: relative; width: 210mm; height: 297mm; overflow: hidden;
+           font-family: Arial, Helvetica, sans-serif; color: #000; }
+  .fid   { position: absolute; width: {{ marker_mm }}mm; height: {{ marker_mm }}mm; background: #000; }
+  .qr    { position: absolute; background: #fff; padding: 3mm; }
+  .qr img{ width: 100%; height: 100%; image-rendering: pixelated; display: block; }
+  .bubble{ position: absolute; width: {{ d }}mm; height: {{ d }}mm; border: .3mm solid #000;
+           border-radius: 50%; background: #fff; }
+  .lbl   { position: absolute; width: {{ label_w }}mm; height: {{ d }}mm; line-height: {{ d }}mm;
+           text-align: right; font-size: 3.3mm; font-weight: bold; }
+  .opt   { position: absolute; width: {{ d }}mm; text-align: center; font-size: 3.2mm; font-weight: bold; }
+  .hdr   { position: absolute; left: 22mm; top: 12mm; width: 130mm; font-size: 3.6mm; line-height: 7mm; }
+  .hdr .line { border-bottom: .2mm solid #000; margin-bottom: 1.5mm; white-space: nowrap; overflow: hidden; }
+  .note  { position: absolute; left: 22mm; top: 280mm; width: 166mm; font-size: 2.8mm; line-height: 3.4mm; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  {# 4 marcadores fiduciais — sempre presentes, sempre iguais #}
+  {% for (l, t) in markers %}<div class="fid" style="left:{{ l }}mm; top:{{ t }}mm"></div>{% endfor %}
+
+  {# QR Code com quiet zone própria #}
+  <div class="qr" style="left:{{ qr[0] }}mm; top:{{ qr[1] }}mm; width:{{ qr[2] }}mm; height:{{ qr[3] }}mm">
+    <img src="data:image/png;base64,{{ qr_png_b64 }}" alt="QR">
+  </div>
+
+  <div class="hdr">
+    <div class="line"><b>{{ exam_title }}</b></div>
+    <div class="line">Aluno(a): {{ student_name }}</div>
+    <div class="line">Turma: {{ class_name }} &nbsp;&nbsp; Data: ____/____/______</div>
+  </div>
+
+  {% for o in option_headers %}<div class="opt" style="left:{{ o.left }}mm; top:{{ o.top }}mm">{{ o.letter }}</div>{% endfor %}
+  {% for l in labels %}<div class="lbl" style="left:{{ l.left }}mm; top:{{ l.top }}mm">{{ l.text }}</div>{% endfor %}
+  {% for b in bubbles %}<div class="bubble" style="left:{{ b.left }}mm; top:{{ b.top }}mm"></div>{% endfor %}
+
+  <div class="note">Preencha completamente a bolha com caneta azul ou preta. Não dobre, não amasse e
+  não escreva sobre os quadrados pretos nos cantos nem sobre o QR&nbsp;Code.</div>
+</div>
+</body>
+</html>

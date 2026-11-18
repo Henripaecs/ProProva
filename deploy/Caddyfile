@@ -1,0 +1,28 @@
+# HTTPS automático (Let's Encrypt) para o endereço em DOMAIN.
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# fotos de até 15 MB + folga
+	request_body {
+		max_size 20MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	handle /v1/* {
+		reverse_proxy api:8000
+	}
+	handle /health {
+		reverse_proxy api:8000
+	}
+	handle {
+		reverse_proxy web:3000
+	}
+}

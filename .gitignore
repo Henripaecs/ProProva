@@ -1,0 +1,50 @@
+﻿# NUNCA versionar: senhas internas e dados de alunos
+.env
+*.env
+!.env.example
+servidor-pc/logs/
+backend/data/
+deploy/data/
+*.db
+*.db-journal
+backups/
+fotos/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Painel (Next.js)
+web/node_modules/
+web/.next/
+web/out/
+web/.env.local
+web/next-env.d.ts
+*.tsbuildinfo
+
+# App (Flutter)
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/android/local.properties
+mobile/android/.gradle/
+mobile/android/.kotlin/
+mobile/android/app/.cxx/
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/ephemeral/
+*.apk
+*.aab
+*.jks
+*.keystore
+mobile/android/key.properties
+
+# Saidas de teste / sistema
+debug/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,11 @@
+**/__pycache__
+**/*.pyc
+backend/data
+web
+mobile
+fotos
+debug
+samples
+deploy/data
+deploy/caddy_*
+.git

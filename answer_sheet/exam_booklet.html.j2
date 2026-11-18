@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>
+  /* Caderno da prova. É um documento SEPARADO do cartão-resposta: o estilo escolhido pelo
+     professor (fonte, colunas, espaçamento) nunca alcança a geometria das bolhas. */
+  @page { size: 210mm 297mm; margin: 14mm 14mm 16mm 14mm; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #000; }
+  body { font-family: {{ font_stack | safe }}; font-size: {{ style.font_size_pt }}pt;
+         line-height: {{ style.line_height }}; }
+
+  /* Na tela (pré-visualização do editor) simula a margem da folha; na impressão vale o @page. */
+  @media screen { body { max-width: 210mm; margin: 0 auto; padding: 14mm; } }
+  .head { border: .35mm solid #000; padding: 3mm 4mm; margin-bottom: 4mm; }
+  .head .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 4mm; }
+  .head .id { display: flex; gap: 3.5mm; align-items: center; }
+  .head .logo { max-height: 20mm; max-width: 42mm; object-fit: contain; display: block; }
+  .head .school { font-size: 1.05em; font-weight: bold; text-transform: uppercase; }
+  .head h1 { font-size: 1.3em; margin: .5mm 0 0 0; }
+  .head .sub { font-size: .95em; }
+  .grade { border: .35mm solid #000; min-width: 24mm; text-align: center; font-size: .8em; padding: 1mm; }
+  .grade .box { height: 9mm; }
+  .fields { display: grid; grid-template-columns: 1fr 34mm 34mm; gap: 1mm 4mm; margin-top: 2.5mm; font-size: .95em; }
+  .field { border-bottom: .25mm solid #000; white-space: nowrap; overflow: hidden; padding-top: 1mm; }
+  .field b { font-weight: normal; }
+  .instructions { margin-top: 2.5mm; font-size: .88em; border-top: .2mm dashed #555; padding-top: 2mm; }
+
+  .questions { column-count: {{ style.columns }}; column-gap: 8mm;
+               {% if style.column_rule and style.columns > 1 %}column-rule: .2mm solid #999;{% endif %} }
+  .q { break-inside: avoid; page-break-inside: avoid; margin: 0 0 4.5mm 0; }
+  .q .stem { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+  .q .num { font-weight: bold; margin-right: 1.5mm; }
+  .q .pts { font-size: .8em; color: #333; }
+  .q .img { display: block; margin: 2mm auto; max-width: 100%; }
+  .opts { list-style: none; margin: 1.5mm 0 0 0; padding: 0; }
+  .opts li { display: flex; gap: 1.8mm; margin: .6mm 0; break-inside: avoid; }
+  .opts .l { font-weight: bold; flex: 0 0 auto; }
+  .opts .ot { display: flex; flex-direction: column; gap: 1mm; min-width: 0; }
+  .opts .oimg { display: block; max-width: 100%; object-fit: contain; }
+
+  /* Título de seção (ex.: "Matemática") ocupa a largura toda, mesmo com 2 colunas */
+  .sec { column-span: all; -webkit-column-span: all; break-after: avoid; margin: 5mm 0 3.5mm 0; }
+  .questions > .sec:first-child { margin-top: 1mm; }
+  .sec h2 { font-size: 1.12em; text-transform: uppercase; letter-spacing: .03em; margin: 0 0 1.5mm 0;
+            border-bottom: .35mm solid #000; padding-bottom: .8mm; }
+  .sec .txt { text-align: justify; hyphens: auto; }
+  .opts.h { display: flex; flex-wrap: wrap; gap: .5mm 6mm; }
+  .opts.h li { margin: 0; }
+  .end { break-inside: avoid; margin-top: 4mm; text-align: center; font-size: .85em; font-style: italic; }
+</style>
+</head>
+<body>
+  <section class="head">
+    <div class="top">
+      <div class="id">
+        {% if logo_src %}<img class="logo" src="{{ logo_src }}" alt="">{% endif %}
+        <div>
+          {% if header.school %}<div class="school">{{ header.school }}</div>{% endif %}
+          <h1>{{ title }}</h1>
+          {% if header.subtitle %}<div class="sub">{{ header.subtitle }}</div>{% endif %}
+        </div>
+      </div>
+      {% if header.show_grade_box %}<div class="grade">NOTA<div class="box"></div></div>{% endif %}
+    </div>
+    <div class="fields">
+      <div class="field"><b>Aluno(a):</b> {{ student_name or "" }}</div>
+      <div class="field"><b>Turma:</b> {{ class_name or "" }}</div>
+      <div class="field"><b>Data:</b> ____/____/______</div>
+    </div>
+    {% if header.instructions %}<div class="instructions">{{ header.instructions | rich }}</div>{% endif %}
+  </section>
+
+  <main class="questions">
+    {% for q in questions %}
+    {% if q.section or q.section_text %}
+    <section class="sec">
+      {% if q.section %}<h2>{{ q.section }}</h2>{% endif %}
+      {% if q.section_text %}<div class="txt">{{ q.section_text | rich }}</div>{% endif %}
+    </section>
+    {% endif %}
+    <article class="q">
+      <div class="stem"><span class="num">{{ loop.index }}.</span>{% if style.show_points %}<span class="pts">({{ q.points }})</span> {% endif %}{{ q.stem | rich }}</div>
+      {% if q.image_src %}<img class="img" src="{{ q.image_src }}" style="width: {{ q.image_width }}%" alt="">{% endif %}
+      <ul class="opts{% if style.option_layout == 'horizontal' %} h{% endif %}">
+        {% for opt in q.options %}<li><span class="l">({{ "ABCDEF"[loop.index0] }})</span><span class="ot">
+          {%- if opt.image_src %}<img class="oimg" src="{{ opt.image_src }}" style="max-height: {{ q.option_image_height }}mm" alt="">{% endif -%}
+          {%- if opt.text %}<span>{{ opt.text | rich }}</span>{% endif -%}
+        </span></li>{% endfor %}
+      </ul>
+    </article>
+    {% endfor %}
+  </main>
+  <div class="end">Fim da prova. Transfira suas respostas para o cartão-resposta.</div>
+</body>
+</html>
