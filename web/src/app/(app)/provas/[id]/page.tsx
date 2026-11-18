@@ -175,18 +175,18 @@ export default function Prova() {
         ) : (
           <table className="t">
             <thead>
-              <tr><th>Aluno</th><th className="r">Nota</th><th className="r">Acertos</th><th className="r">Erros</th><th className="r">Brancos</th><th>Situação</th><th>Corrigido em</th></tr>
+              <tr><th>Aluno</th><th className="r">Nota</th><th className="r hide-sm">Acertos</th><th className="r hide-sm">Erros</th><th className="r hide-sm">Brancos</th><th>Situação</th><th className="hide-sm">Corrigido em</th></tr>
             </thead>
             <tbody>
               {results.data.map((r) => (
                 <tr key={r.scan_id} className="click" onClick={() => router.push(`/correcoes/${r.scan_id}`)}>
                   <td><b>{r.student_name}</b></td>
-                  <td className="r num"><b>{fmtScore(r.score.points)}</b> <span className="muted">/ {fmtScore(r.score.max_points)}</span></td>
-                  <td className="r num">{r.score.correct}</td>
-                  <td className="r num">{r.score.wrong}</td>
-                  <td className="r num">{r.score.blank}</td>
-                  <td>{r.review_needed.length ? <span className="tag warn">revisar {r.review_needed.length} questão(ões)</span> : <span className="tag ok">final</span>}</td>
-                  <td className="small muted">{fmtDate(r.created_at)}</td>
+                  <td className="r num nota"><b>{fmtScore(r.score.points)}</b> <span className="muted">/ {fmtScore(r.score.max_points)}</span></td>
+                  <td className="r num hide-sm">{r.score.correct}</td>
+                  <td className="r num hide-sm">{r.score.wrong}</td>
+                  <td className="r num hide-sm">{r.score.blank}</td>
+                  <td>{r.review_needed.length ? <span className="tag warn">revisar {r.review_needed.length}</span> : <span className="tag ok">final</span>}</td>
+                  <td className="small muted hide-sm">{fmtDate(r.created_at)}</td>
                 </tr>
               ))}
             </tbody>

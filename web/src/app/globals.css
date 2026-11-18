@@ -179,7 +179,12 @@ table.t td.r, table.t th.r { text-align: right; }
 @media (max-width: 900px) {
   .shell { grid-template-columns: minmax(0, 1fr); }
   .side { position: static; height: auto; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; align-items: center; border-right: 0; border-bottom: 1px solid var(--line); padding: 10px 12px; }
-  .brand { margin: 0 12px 0 0; }
+  .brand { margin: 0 6px 0 0; font-size: 17px; }
+  .brand .dot { width: 15px; height: 15px; }
+  .side a.nav { padding: 6px 8px; font-size: 14px; white-space: nowrap; }
+  .side .btn.sm { padding: 4px 6px; }
+  table.t .hide-sm { display: none; }
+  table.t td.nota { white-space: nowrap; }
   .side .grow, .side .who { display: none; }
   .main { padding: 20px 16px 48px; }
   .editor, .review, .grid2 { grid-template-columns: minmax(0, 1fr); }

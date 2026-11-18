@@ -1,4 +1,4 @@
-﻿# NUNCA versionar: senhas internas e dados de alunos
+# ── NUNCA versionar: senhas internas e dados de alunos ──────────────────────
 .env
 *.env
 !.env.example
@@ -8,15 +8,14 @@ deploy/data/
 *.db
 *.db-journal
 backups/
-fotos/
 
-# Python
+# ── Python ──────────────────────────────────────────────────────────────────
 __pycache__/
 *.pyc
 .venv/
 venv/
 
-# Painel (Next.js)
+# ── Painel (Next.js) ────────────────────────────────────────────────────────
 web/node_modules/
 web/.next/
 web/out/
@@ -24,7 +23,7 @@ web/.env.local
 web/next-env.d.ts
 *.tsbuildinfo
 
-# App (Flutter)
+# ── App (Flutter) ───────────────────────────────────────────────────────────
 mobile/.dart_tool/
 mobile/build/
 mobile/.flutter-plugins
@@ -38,11 +37,12 @@ mobile/ios/.symlinks/
 mobile/ios/Flutter/ephemeral/
 *.apk
 *.aab
+# chaves de assinatura do app (se um dia publicar na loja)
 *.jks
 *.keystore
 mobile/android/key.properties
 
-# Saidas de teste / sistema
+# ── Saídas de teste / sistema ───────────────────────────────────────────────
 debug/
 .DS_Store
 Thumbs.db
